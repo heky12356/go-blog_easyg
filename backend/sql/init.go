@@ -1,0 +1,4 @@
+package sql
+
+func Init() {
+}

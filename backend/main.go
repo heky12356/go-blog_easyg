@@ -1,15 +1,13 @@
 package main
 
 import (
-	"net/http"
+	"goblogeasyg/service"
 
-	"github.com/labstack/echo/v4"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-	e.Logger.Fatal(e.Start(":1323"))
+	r := gin.Default()
+	r.GET("/", service.Home)
+	r.Run()
 }
