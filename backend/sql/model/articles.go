@@ -1,8 +1,6 @@
 package sql
 
 import (
-	"fmt"
-
 	"goblogeasyg/sql"
 
 	"gorm.io/gorm"
@@ -10,14 +8,15 @@ import (
 
 type Tag struct {
 	gorm.Model
-	Name    string
+	Name    string    `gorm:"uniqueIndex"`
 	Aticles []Article `gorm:"many2many:article_tags;"`
 }
 type Article struct {
-	gorm.Model
+	BaceModel
 	Content string
 	Title   string
-	Tags    []Tag `gorm:"many2many:article_tags;"`
+	Uid     string `gorm:"primarykey"`
+	Tags    []Tag  `gorm:"many2many:article_tags;"`
 }
 
 func AutoMigrate() (err error) {
@@ -26,14 +25,33 @@ func AutoMigrate() (err error) {
 	return
 }
 
-func CreatePost(artical Article) (err error) {
+func CreatePost(artical Article) error {
 	db := sql.GetDB()
-	if artical.Tags == nil {
-		fmt.Print("tags is nil")
-	}
-	fmt.Print(artical.Tags)
-	err = db.Create(&artical).Error
-	return
+	return db.Transaction(func(tx *gorm.DB) error {
+		// 处理每一个tag
+		for i, tag := range artical.Tags {
+			var exitTag Tag
+			if err := tx.Where("name = ?", tag.Name).First(&exitTag).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					err = tx.Create(&tag).Error
+					if err != nil {
+						return err
+					}
+					artical.Tags[i] = tag
+				}
+			} else {
+				artical.Tags[i] = exitTag
+			}
+		}
+
+		// 创建文章
+		err := tx.Create(&artical).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 func GetPosts() (posts []interface{}, err error) {
@@ -53,11 +71,29 @@ func GetPosts() (posts []interface{}, err error) {
 			tagsreturn = append(tagsreturn, tag.Name)
 		}
 		posts = append(posts, map[string]interface{}{
-			"id":      t.ID,
 			"title":   t.Title,
 			"content": t.Content,
+			"uid":     t.Uid,
 			"tags":    tagsreturn,
 		})
+	}
+	return
+}
+
+func DeletePost(uid string) (err error) {
+	var artical Article
+	db := sql.GetDB()
+	err = db.Where("uid = ?", uid).First(&artical).Error
+	if err != nil {
+		return err
+	}
+	err = db.Model(&artical).Association("Tags").Clear()
+	if err != nil {
+		return err
+	}
+	err = db.Model(&artical).Delete(&artical).Error
+	if err != nil {
+		return err
 	}
 	return
 }

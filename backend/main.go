@@ -28,6 +28,7 @@ func main() {
 		test.GET("/init", service.DBinit)
 		test.POST("/create", service.CreatePost)
 		test.GET("/getposts", service.GetPosts)
+		test.DELETE("/delete/:uid", service.DeletePost)
 	}
 	r.Run()
 }

@@ -1,5 +1,6 @@
 /esayg_frontend/node_modules
 /esayg_frontend/.gitignore
-/backend/tmp
+/backend/tmp/
+/backend/test.db
 
 

@@ -4,10 +4,12 @@ import (
 	"net/http"
 
 	sql "goblogeasyg/sql/model"
+	"goblogeasyg/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
+// 创建
 func CreatePost(c *gin.Context) {
 	var artical map[string]interface{}
 	if err := c.ShouldBind(&artical); err != nil {
@@ -30,10 +32,19 @@ func CreatePost(c *gin.Context) {
 		tags = append(tags, sql.Tag{Name: t.(string)})
 	}
 
-	err := sql.CreatePost(sql.Article{
+	// 创建uid
+	uid, err := utils.CreateUid()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 使用sql.CreatePost插入数据
+	err = sql.CreatePost(sql.Article{
 		Content: artical["content"].(string),
 		Title:   artical["title"].(string),
 		Tags:    tags,
+		Uid:     uid,
 	})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -42,6 +53,7 @@ func CreatePost(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "create"})
 }
 
+// 获取
 func GetPosts(c *gin.Context) {
 	posts, err := sql.GetPosts()
 	if err != nil {
@@ -51,7 +63,23 @@ func GetPosts(c *gin.Context) {
 	c.JSON(200, gin.H{"posts": posts})
 }
 
+// 删除
+func DeletePost(c *gin.Context) {
+	uid := c.Param("uid")
+	err := sql.DeletePost(uid)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(200, gin.H{"message": "delete success"})
+}
+
+// 初始化
 func DBinit(c *gin.Context) {
-	sql.AutoMigrate()
+	err := sql.AutoMigrate()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(200, gin.H{"message": "init db success"})
 }
