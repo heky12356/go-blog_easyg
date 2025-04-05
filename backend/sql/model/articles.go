@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"log"
+
 	"goblogeasyg/sql"
 
 	"gorm.io/gorm"
@@ -81,19 +83,35 @@ func GetPosts() (posts []interface{}, err error) {
 }
 
 func DeletePost(uid string) (err error) {
-	var artical Article
+	var article Article
 	db := sql.GetDB()
-	err = db.Where("uid = ?", uid).First(&artical).Error
+	err = db.Where("uid = ?", uid).First(&article).Error
 	if err != nil {
 		return err
 	}
-	err = db.Model(&artical).Association("Tags").Clear()
+	if err := db.Model(&article).Preload("Tags").First(&article).Error; err != nil {
+		return err
+	}
+	log.Default().Print(article.Tags)
+	for _, tag := range article.Tags {
+		count := db.Model(&tag).Association("Aticles").Count()
+		if count == 1 {
+			err = db.Delete(&tag).Error
+			if err != nil {
+				return err
+			}
+		}
+	}
+	err = db.Model(&article).Association("Tags").Clear()
 	if err != nil {
 		return err
 	}
-	err = db.Model(&artical).Delete(&artical).Error
+	err = db.Model(&article).Delete(&article).Error
 	if err != nil {
 		return err
 	}
+
+	log.Default().Print(article.Tags)
+
 	return
 }
