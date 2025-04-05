@@ -29,6 +29,7 @@ func main() {
 		test.POST("/create", service.CreatePost)
 		test.GET("/getposts", service.GetPosts)
 		test.DELETE("/delete/:uid", service.DeletePost)
+		test.GET("/post/:uid", service.GetPost)
 	}
 	r.Run()
 }

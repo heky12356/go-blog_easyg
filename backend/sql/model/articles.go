@@ -56,7 +56,7 @@ func CreatePost(artical Article) error {
 	})
 }
 
-func GetPosts() (posts []interface{}, err error) {
+func GetPostsBase() (posts []interface{}, err error) {
 	var post []Article
 	db := sql.GetDB()
 	// 使用 Preload 加载关联的 Tags
@@ -66,18 +66,36 @@ func GetPosts() (posts []interface{}, err error) {
 	}
 	for _, t := range post {
 		tags := t.Tags
-		// fmt.Print(tags)
 		tagsreturn := []string{}
 		for _, tag := range tags {
-			// fmt.Print(tag.Name)
 			tagsreturn = append(tagsreturn, tag.Name)
 		}
 		posts = append(posts, map[string]interface{}{
-			"title":   t.Title,
-			"content": t.Content,
-			"uid":     t.Uid,
-			"tags":    tagsreturn,
+			"title": t.Title,
+			"uid":   t.Uid,
+			"tags":  tagsreturn,
 		})
+	}
+	return
+}
+
+func GetPostByUid(uid string) (post interface{}, err error) {
+	var article Article
+	db := sql.GetDB()
+	err = db.Preload("Tags").Where("uid = ?", uid).First(&article).Error
+	if err != nil {
+		return nil, err
+	}
+	tags := article.Tags
+	tagsreturn := []string{}
+	for _, tag := range tags {
+		tagsreturn = append(tagsreturn, tag.Name)
+	}
+	post = map[string]interface{}{
+		"title":   article.Title,
+		"content": article.Content,
+		"uid":     article.Uid,
+		"tags":    tagsreturn,
 	}
 	return
 }

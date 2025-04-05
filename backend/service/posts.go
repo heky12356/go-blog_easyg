@@ -55,12 +55,22 @@ func CreatePost(c *gin.Context) {
 
 // 获取
 func GetPosts(c *gin.Context) {
-	posts, err := sql.GetPosts()
+	posts, err := sql.GetPostsBase()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(200, gin.H{"posts": posts})
+}
+
+func GetPost(c *gin.Context) {
+	uid := c.Param("uid")
+	post, err := sql.GetPostByUid(uid)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(200, gin.H{"post": post})
 }
 
 // 删除
