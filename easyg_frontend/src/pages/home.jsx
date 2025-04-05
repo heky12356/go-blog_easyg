@@ -21,18 +21,21 @@ function Home() {
 
   if (loading) return <div>加载中...</div>;
   if (error) return <div>发生错误...</div>;
-  console.log(data);
+  //console.log(data);
+
   return (
     <div>
       <div>Home</div>
       <br />
       {data.map(post => (
-        <div key={post.id}>
-          <Link to={`/post/${post.uid}`}>{post.title}</Link>
+        <div key={post.uid}>
+          <Link to={`/post/${post.uid}`} className="text-decoration-none">{post.title}</Link>
           <hr />
         </div>
       ))}
-      <Link to="/test">test</Link>
+      <Link to="/about">about</Link>
+      <span> | </span>
+      <Link to="/admin">admin</Link>
     </div>
   );
 }
