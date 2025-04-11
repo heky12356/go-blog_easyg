@@ -17,7 +17,7 @@ export default function Delete() {
   const [uid, setUid] = useState(null);
   useEffect(() => {
     axios
-      .get("/api/test/getposts")
+      .get("/api/api/post/getposts")
       .then((response) => {
         setData(response.data.posts);
         setLoading(false);
@@ -35,7 +35,7 @@ export default function Delete() {
   const deletepost = async () => {
     //console.log(uid);
     try {
-        await axios.delete(`/api/test/delete/${uid}`);
+        await axios.delete(`/api/api/post/delete/${uid}`);
         setData(data.filter(post => post.uid !== uid));
         setIserror(true)
         setModalMessage("删除成功!");

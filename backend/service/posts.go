@@ -83,13 +83,3 @@ func DeletePost(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{"message": "delete success"})
 }
-
-// 初始化
-func DBinit(c *gin.Context) {
-	err := sql.AutoMigrate()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(200, gin.H{"message": "init db success"})
-}

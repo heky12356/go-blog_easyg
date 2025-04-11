@@ -8,7 +8,7 @@ function Home() {
   const [error, setError] = useState(null);
   useEffect(() => {
     axios
-      .get("api/test/getposts")
+      .get("api/api/post/getposts")
       .then((response) => {
         setData(response.data.posts);
         setLoading(false);

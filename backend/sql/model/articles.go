@@ -21,7 +21,7 @@ type Article struct {
 	Tags    []Tag  `gorm:"many2many:article_tags;"`
 }
 
-func AutoMigrate() (err error) {
+func AutoMigrateArticle() (err error) {
 	db := sql.GetDB()
 	err = db.AutoMigrate(&Article{}, &Tag{})
 	return

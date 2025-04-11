@@ -11,7 +11,7 @@ export default function Post() {
   useEffect(() => {
     if (uid) {
       axios
-        .get("/api/test/post/" + uid)
+        .get("/api/api/post/post/" + uid)
         .then((response) => {
           setData(response.data.post);
           setLoading(false);

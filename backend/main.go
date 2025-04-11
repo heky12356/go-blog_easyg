@@ -23,13 +23,13 @@ func main() {
 	}
 	r := gin.Default()
 	r.GET("/", service.Home)
-	test := r.Group("/test")
+	r.GET("/init", service.DBinit)
+	postapi := r.Group("/api/post")
 	{
-		test.GET("/init", service.DBinit)
-		test.POST("/create", service.CreatePost)
-		test.GET("/getposts", service.GetPosts)
-		test.DELETE("/delete/:uid", service.DeletePost)
-		test.GET("/post/:uid", service.GetPost)
+		postapi.POST("/create", service.CreatePost)
+		postapi.GET("/getposts", service.GetPosts)
+		postapi.DELETE("/delete/:uid", service.DeletePost)
+		postapi.GET("/post/:uid", service.GetPost)
 	}
 	r.Run()
 }

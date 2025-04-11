@@ -40,7 +40,7 @@ export default function Create() {
     //console.log(data);
     // 使用 axios 发送 POST 请求，注意修改 URL 为你的接口地址
     axios
-      .post("/api/test/create", data)
+      .post("/api/api/post/create", data)
       .then((response) => {
         setShowModal(true);
         setModalMessage(response.data.message);
@@ -71,7 +71,7 @@ export default function Create() {
               <Form.Label>内容</Form.Label>
               <Form.Control
                 as="textarea"
-                rows={20}
+                rows={17}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
