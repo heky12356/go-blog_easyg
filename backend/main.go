@@ -24,6 +24,11 @@ func main() {
 	r := gin.Default()
 	r.GET("/", service.Home)
 	r.GET("/init", service.DBinit)
+	apiuser := r.Group("/api/user")
+	{
+		apiuser.POST("/register", service.Register)
+		apiuser.POST("/login", service.Login)
+	}
 	postapi := r.Group("/api/post")
 	{
 		postapi.POST("/create", service.CreatePost)

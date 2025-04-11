@@ -11,6 +11,14 @@ api
     删除文章
     DELETE /delete/:uid
 
+/api/user :
+
+    登录
+    POST /login
+
+    注册
+    POST /register
+
 初始化
 GET /init  
 

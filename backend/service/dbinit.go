@@ -15,5 +15,10 @@ func DBinit(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	err = sql.AutoMigrateUser()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(200, gin.H{"message": "init db success"})
 }
