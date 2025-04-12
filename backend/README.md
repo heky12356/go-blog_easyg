@@ -19,6 +19,9 @@ api
     注册
     POST /register
 
+    获取全部用户
+    GET /getalluser
+
 初始化
 GET /init  
 

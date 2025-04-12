@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Markdown from "react-markdown";
 export default function Post() {
   const { uid } = useParams();
   const [data, setData] = useState(null);
@@ -35,7 +36,9 @@ export default function Post() {
       <div style={{ height: "100%" }}>
         <div className="h-75">
           <h2 className="text-center pb-3 mb-3">{data.title}</h2>
-          <Container className="" style={{ whiteSpace: "pre-wrap" }}>{data.content}</Container>
+          <Container className="" style={{whiteSpace: "pre-wrap" }}>
+            <Markdown>{data.content}</Markdown>
+          </Container>
         </div>
         <div>
           <hr />

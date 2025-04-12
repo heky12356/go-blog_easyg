@@ -41,3 +41,16 @@ func DeleteUser(user User) (err error) {
 	err = db.Delete(&user).Error
 	return
 }
+
+func GetallUser() (data []map[string]interface{}, err error) {
+	var user []User
+	db := sql.GetDB()
+	err = db.Find(&user).Error
+	for _, u := range user {
+		data = append(data, map[string]interface{}{
+			"username": u.Username,
+			"email":    u.Email,
+		})
+	}
+	return
+}

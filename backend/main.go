@@ -28,6 +28,7 @@ func main() {
 	{
 		apiuser.POST("/register", service.Register)
 		apiuser.POST("/login", service.Login)
+		apiuser.GET("/getalluser", service.GetallUser)
 	}
 	postapi := r.Group("/api/post")
 	{

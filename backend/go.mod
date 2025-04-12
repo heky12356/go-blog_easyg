@@ -5,6 +5,8 @@ go 1.23.2
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
+	github.com/sirupsen/logrus v1.9.3
+	golang.org/x/crypto v0.31.0
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.25.12
 )
@@ -14,6 +16,7 @@ require (
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -34,7 +37,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
