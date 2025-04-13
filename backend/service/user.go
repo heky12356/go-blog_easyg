@@ -20,7 +20,7 @@ type User struct {
 // refresh access token
 func RefreshAccessToken(c *gin.Context) {
 	var data struct {
-		RefreshToken string `json:"refresh_token"`
+		RefreshToken string `json:"refreshToken"`
 	}
 	if err := c.ShouldBind(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

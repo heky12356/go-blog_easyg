@@ -7,6 +7,7 @@ import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import query from "../../utils/query";
 export default function Delete() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,8 +17,8 @@ export default function Delete() {
   const [iserror, setIserror] = useState(false);
   const [uid, setUid] = useState(null);
   useEffect(() => {
-    axios
-      .get("/api/api/post/getposts")
+    query
+      .get("/api/post/getposts")
       .then((response) => {
         setData(response.data.posts);
         setLoading(false);
@@ -35,7 +36,7 @@ export default function Delete() {
   const deletepost = async () => {
     //console.log(uid);
     try {
-        await axios.delete(`/api/api/post/delete/${uid}`);
+        await query.delete(`/api/post/delete/${uid}`);
         setData(data.filter(post => post.uid !== uid));
         setIserror(true)
         setModalMessage("删除成功!");
@@ -58,6 +59,7 @@ export default function Delete() {
   const handleClose = () => {
     setShowModal(false);
     setModalMessage("");
+    setIserror(false);
   }
 
   return (

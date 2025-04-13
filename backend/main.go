@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"goblogeasyg/middleware"
 	"goblogeasyg/service"
 	"goblogeasyg/sql"
 
@@ -33,9 +34,10 @@ func main() {
 	}
 	postapi := r.Group("/api/post")
 	{
-		postapi.POST("/create", service.CreatePost)
+		postapi.POST("/create", middleware.Auth(), service.CreatePost)
+		postapi.DELETE("/delete/:uid", middleware.Auth(), service.DeletePost)
+
 		postapi.GET("/getposts", service.GetPosts)
-		postapi.DELETE("/delete/:uid", service.DeletePost)
 		postapi.GET("/post/:uid", service.GetPost)
 	}
 	r.Run()

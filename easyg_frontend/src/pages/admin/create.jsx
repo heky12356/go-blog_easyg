@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from 'react-bootstrap/Modal';
 import axios from "axios";
+import query from "../../utils/query";
 
 export default function Create() {
   // 使用 useState 来保存 title、content 和 tag 的值
@@ -38,9 +39,9 @@ export default function Create() {
       tags: tags,
     };
     //console.log(data);
-    // 使用 axios 发送 POST 请求，注意修改 URL 为你的接口地址
-    axios
-      .post("/api/api/post/create", data)
+    // 使用 axios 实例 query 发送 POST 请求，注意修改 URL 为你的接口地址
+    query
+      .post("/api/post/create", data)
       .then((response) => {
         setShowModal(true);
         setModalMessage(response.data.message);

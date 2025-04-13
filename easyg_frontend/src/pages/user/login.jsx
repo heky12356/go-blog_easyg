@@ -21,12 +21,12 @@ export default function Login() {
       })
       .then((response) => {
         //console.log(response.data);
-        Cookies.set("accessToken", response.data.accessToken, {
+        Cookies.set("refreshToken", response.data.refreshToken, {
+          expires: 3,
           secure: true,
           sameSite: "Strict",
         });
-        Cookies.set("refreshToken", response.data.refreshToken, {
-          expires: 3,
+        Cookies.set("accessToken", response.data.accessToken, {
           secure: true,
           sameSite: "Strict",
         });
@@ -34,6 +34,7 @@ export default function Login() {
         setLoggedIn(true);
       })
       .catch((error) => {
+        console.log(error);
         console.log(error.response.data);
       });
   }
