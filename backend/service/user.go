@@ -78,7 +78,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(200, gin.H{"message": "Login", "refresh_token": refreshtoken, "access_token": acessstoken})
+	c.JSON(200, gin.H{"message": "Login", "refreshToken": refreshtoken, "accessToken": acessstoken})
 }
 
 // Register

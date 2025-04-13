@@ -4,28 +4,43 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 export default function Login() {
-    const [username, setUsername] = useState(null);
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        axios
-        .post("/api/api/user/login", {
-          username: username,
-          password: password,
-        })
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [isloggedin, setLoggedIn] = useState(false);
+  function handleSubmit(e) {
+    e.preventDefault();
+    axios
+      .post("/api/api/user/login", {
+        username: username,
+        password: password,
+      })
+      .then((response) => {
+        //console.log(response.data);
+        Cookies.set("accessToken", response.data.accessToken, {
+          secure: true,
+          sameSite: "Strict",
         });
-    }
+        Cookies.set("refreshToken", response.data.refreshToken, {
+          expires: 3,
+          secure: true,
+          sameSite: "Strict",
+        });
+        //console.log("success");
+        setLoggedIn(true);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
+  }
 
+  if (isloggedin) {
+    return <Navigate to="/" />;
+  }
   return (
     <Container style={{ height: "70vh" }} className="pt-5">
       <Row>
@@ -36,14 +51,22 @@ export default function Login() {
                 {username ? "" : <span className="text-danger">* </span>}
                 Username
               </Form.Label>
-              <Form.Control type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+              <Form.Control
+                type="text"
+                placeholder="Username"
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>
                 {password ? "" : <span className="text-danger">* </span>}
                 Password
               </Form.Label>
-              <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </Form.Group>
             <Button variant="primary" type="submit" onClick={handleSubmit}>
               Submit

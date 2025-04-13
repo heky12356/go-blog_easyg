@@ -8,7 +8,7 @@ admin /admin
     create /admin/create  
     delete /admin/delete  
 
-login /login
+login /login  
 register /register
 
 

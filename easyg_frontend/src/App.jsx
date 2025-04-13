@@ -11,6 +11,7 @@ import Delete from "./pages/admin/delete";
 import Login from "./pages/user/login";
 import Register from "./pages/user/register";
 import Footer from "./pages/footer";
+import Verify from "./utils/verify";
 export default function App() {
   const location = useLocation(); // 获取当前路径
   let titleSuffix = ""; // 初始化动态后缀为空
@@ -34,7 +35,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<Test />} />
           <Route path="/about" element={<About />} />
-          <Route path="/admin" element={<Admin />}>
+          <Route path="/admin" element={<Verify><Admin /></Verify>}>
             <Route path="create" element={<Create />} />
             <Route path="delete" element={<Delete />} />
           </Route>

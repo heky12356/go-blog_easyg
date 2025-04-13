@@ -19,7 +19,7 @@ func RefreshToken(token string) (string, error) {
 	if claims.Type != "refresh" {
 		return "", err
 	}
-	accessToken, err := CreateRefreshToken(claims.Username)
+	accessToken, err := CreateAssessToken(claims.Username)
 	if err != nil {
 		return "", err
 	}
