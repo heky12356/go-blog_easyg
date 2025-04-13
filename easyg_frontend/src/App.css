@@ -1,0 +1,4 @@
+.container-height {
+    min-height: 70vh; /* 设置最小高度 */
+    max-height: auto; /* 如果需要，可以确保最大高度 */
+}

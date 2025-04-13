@@ -30,7 +30,7 @@ export default function Register() {
     }
 
   return (
-    <Container style={{ height: "70vh" }} className="pt-5">
+    <Container className="pt-5">
       <Row>
         <Col md={{ span: 4, offset: 4 }}>
           <Form>

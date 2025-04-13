@@ -1,4 +1,5 @@
 import React from "react";
+import './App.css'
 import Container from "react-bootstrap/Container";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import Test from "./pages/test";
@@ -28,24 +29,35 @@ export default function App() {
               Blog
             </Link>
           </h1>
-          <div className="align-self-end pb-2">{titleSuffix ? " | " + titleSuffix : ""}</div>
+          <div className="align-self-end pb-2">
+            {titleSuffix ? " | " + titleSuffix : ""}
+          </div>
         </div>
         <hr className="mb-5" />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/admin" element={<Verify><Admin /></Verify>}>
-            <Route path="create" element={<Create />} />
-            <Route path="delete" element={<Delete />} />
-          </Route>
-          <Route path="/post" element={<Post />}>
-            <Route path=":uid" element={<Post />} />
-          </Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<div>404</div>} />
-        </Routes>
+        <Container className="container-height">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/about" element={<About />} />
+            <Route
+              path="/admin"
+              element={
+                <Verify>
+                  <Admin />
+                </Verify>
+              }
+            >
+              <Route path="create" element={<Create />} />
+              <Route path="delete" element={<Delete />} />
+            </Route>
+            <Route path="/post" element={<Post />}>
+              <Route path=":uid" element={<Post />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={<div>404</div>} />
+          </Routes>
+        </Container>
         <Footer />
       </Container>
     </div>
