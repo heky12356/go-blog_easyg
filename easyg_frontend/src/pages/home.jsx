@@ -33,12 +33,7 @@ function Home() {
           <hr />
         </div>
       ))}
-      <div className="mb-4">
-      <Link to="/about">about</Link>
-      <span> | </span>
-      <Link to="/admin">admin</Link>
-      </div>
-    </div> 
+    </div>
   );
 }
 

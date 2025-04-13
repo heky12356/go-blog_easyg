@@ -83,9 +83,23 @@ func Login(c *gin.Context) {
 
 // Register
 func Register(c *gin.Context) {
-	var user User
+	var user struct {
+		Username        string `json:"username"`
+		Password        string `json:"password"`
+		ConfirmPassword string `json:"confirmPassword"`
+		Email           string `json:"email"`
+	}
 	if err := c.ShouldBind(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if user.Username == "" || user.Password == "" || user.ConfirmPassword == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password cannot be empty"})
+		return
+	}
+	if user.Password != user.ConfirmPassword {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "password and confirm password not match"})
 		return
 	}
 

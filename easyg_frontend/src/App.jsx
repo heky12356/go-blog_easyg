@@ -9,6 +9,8 @@ import Admin from "./pages/admin";
 import Create from "./pages/admin/create";
 import Delete from "./pages/admin/delete";
 import Login from "./pages/user/login";
+import Register from "./pages/user/register";
+import Footer from "./pages/footer";
 export default function App() {
   const location = useLocation(); // 获取当前路径
   let titleSuffix = ""; // 初始化动态后缀为空
@@ -40,8 +42,10 @@ export default function App() {
             <Route path=":uid" element={<Post />} />
           </Route>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<div>404</div>} />
         </Routes>
+        <Footer />
       </Container>
     </div>
   );
