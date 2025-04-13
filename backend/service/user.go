@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	sql "goblogeasyg/sql/model"
-	"goblogeasyg/utils"
+	utils "goblogeasyg/utils/jwt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -18,17 +18,15 @@ type User struct {
 }
 
 // refresh access token
-func RefreshToken(c *gin.Context) {
-	var data User
+func RefreshAccessToken(c *gin.Context) {
+	var data struct {
+		RefreshToken string `json:"refresh_token"`
+	}
 	if err := c.ShouldBind(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if data.Username == "" || data.Password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password cannot be empty"})
-		return
-	}
-	token, err := utils.CreateAssessToken(data.Username)
+	token, err := utils.RefreshToken(data.RefreshToken)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

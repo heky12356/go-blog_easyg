@@ -29,6 +29,7 @@ func main() {
 		apiuser.POST("/register", service.Register)
 		apiuser.POST("/login", service.Login)
 		apiuser.GET("/getalluser", service.GetallUser)
+		apiuser.POST("/refreshaccesstoken", service.RefreshAccessToken)
 	}
 	postapi := r.Group("/api/post")
 	{

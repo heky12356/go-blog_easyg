@@ -22,6 +22,9 @@ api
     获取全部用户
     GET /getalluser
 
+    刷新令牌
+    POST /refreshaccesstoken
+
 初始化
 GET /init  
 
