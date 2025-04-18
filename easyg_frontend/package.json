@@ -12,12 +12,16 @@
   "dependencies": {
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
+    "github-markdown-css": "^5.8.1",
     "js-cookie": "^3.0.5",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.5.0"
+    "react-router-dom": "^7.5.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
