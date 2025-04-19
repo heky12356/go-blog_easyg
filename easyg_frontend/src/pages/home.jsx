@@ -7,16 +7,18 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    axios
-      .get("api/api/post/getposts")
-      .then((response) => {
-        setData(response.data.posts);
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get("api/api/post/getposts");
+        if (response.data.posts != null) setData(response.data.posts);
+        else setData([]);
         setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         setError(err);
         setLoading(false);
-      });
+      }
+    };
+    fetchPosts();    
   }, []);
 
   if (loading) return <div>加载中...</div>;
