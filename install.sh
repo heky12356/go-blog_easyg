@@ -33,7 +33,7 @@ then
 fi
 
 # 安装 Vite
-npm install -g vite
+# npm install -g vite
 
 # 安装 Git
 sudo apt install git -y
@@ -50,7 +50,7 @@ read -p "请输入web路径:" DEPLOY_DIR
 git clone $REPO_URL $CLONE_DIR
 
 # 进入目录
-cd $CLONE_DIR + "/easyg_frontend"
+cd "$CLONE_DIR/easyg_frontend"     
 
 # 安装依赖
 npm install
