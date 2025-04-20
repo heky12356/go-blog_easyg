@@ -9,21 +9,24 @@ sudo apt update && sudo apt upgrade -y
 #安装 Curl
 sudo apt install curl -y
 
-# 下周easyg.sh
-curl -O https://raw.githubusercontent.com/heky12356/go-blog_easyg/refs/heads/main/easyg.sh
-chmod +x easyg.sh
-
 # 安装 Node.js
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # 安装 Go
-curl -O https://storage.googleapis.com/golang/go1.23.8.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.23.8.linux-amd64.tar.gz
+curl -O https://dl.google.com/go/go1.24.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.24.2.linux-amd64.tar.gz
 cp -r /usr/local/go/bin/* /usr/bin
 
 # 设置Go环境变量
 export PATH=$PATH:/usr/local/go/bin
+export GOROOT=/usr/local/go
+
+if ! grep -q 'xport GOROOT=/usr/local/go' ~/.bashrc
+then
+    echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
+    source ~/.bashrc
+fi
 
 if [ grep -q 'export PATH=$PATH:/usr/local/go/bin' ~/.bashrc -eq 1 ]
 then
@@ -65,8 +68,8 @@ npm run build
 # 移动文件
 mv dist/* $DEPLOY_DIR
 
-# 进入后端目录
-cd "$CLONE_DIR/backend"
+# 返回项目目录
+cd "$CLONE_DIR"
 
 # 编译源码
 ./easyg.sh install
@@ -74,8 +77,8 @@ cd "$CLONE_DIR/backend"
 echo -e "安装完成\n"
 cat <<EOF
 可以使用
-./deploy.sh install   # 编译项目
-./deploy.sh start     # 启动服务
-./deploy.sh status    # 查看状态
-./deploy.sh stop      # 停止服务
+./easyg.sh install   # 编译项目
+./easyg.sh start     # 启动服务
+./easyg.sh status    # 查看状态
+./easyg.sh stop      # 停止服务
 EOF
