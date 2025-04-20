@@ -53,7 +53,6 @@ show_help() {
 # 主逻辑
 case "$1" in
   install)
-    clone_repo
     build_project
     ;;
   start)
