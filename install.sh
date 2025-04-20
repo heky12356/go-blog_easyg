@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 确定web路径
+read -p "请输入web路径:" DEPLOY_DIR
+
 #更新系统软件包
 sudo apt update && sudo apt upgrade -y
 
@@ -42,9 +45,6 @@ sudo apt install git -y
 # 设置变量
 REPO_URL="https://github.com/heky12356/go-blog_easyg.git"
 CLONE_DIR="/opt/easyg"
-
-# 确定web路径
-read -p "请输入web路径:" DEPLOY_DIR
 
 # 克隆仓库
 git clone $REPO_URL $CLONE_DIR
