@@ -18,8 +18,8 @@ curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # 安装 Go
-curl -O https://storage.googleapis.com/golang/go1.20.5.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.20.5.linux-amd64.tar.gz
+curl -O https://storage.googleapis.com/golang/go1.23.8.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.23.8.linux-amd64.tar.gz
 cp -r /usr/local/go/bin/* /usr/bin
 
 # 设置Go环境变量
