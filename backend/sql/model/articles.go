@@ -35,11 +35,21 @@ func CreatePost(artical Article) error {
 			var exitTag Tag
 			if err := tx.Where("name = ?", tag.Name).First(&exitTag).Error; err != nil {
 				if err == gorm.ErrRecordNotFound {
-					err = tx.Create(&tag).Error
-					if err != nil {
-						return err
+					if err := tx.Unscoped().Where("name = ?", tag.Name).First(&exitTag).Error; err == nil {
+						// 如果软删除的tag存在，恢复它
+						log.Print(exitTag)
+						if err := tx.Unscoped().Model(&exitTag).Update("deleted_at", nil).Error; err != nil {
+							return err
+						}
+						artical.Tags[i] = exitTag
+					} else {
+						// 如果没有找到软删除的tag，则创建新tag
+						err = tx.Create(&tag).Error
+						if err != nil {
+							return err
+						}
+						artical.Tags[i] = tag
 					}
-					artical.Tags[i] = tag
 				}
 			} else {
 				artical.Tags[i] = exitTag
