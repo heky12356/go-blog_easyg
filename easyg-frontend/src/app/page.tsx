@@ -6,7 +6,7 @@ export default async function Home() {
   const res = await fetch('http://localhost:8080/api/post/getposts');
   const data = await res.json();
   const posts = data.posts;
-  console.log(data)
+  // console.log(data)
   return (
     <>  
     <div>
