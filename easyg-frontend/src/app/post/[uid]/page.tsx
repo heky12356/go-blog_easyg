@@ -1,6 +1,6 @@
 import axios from "axios"
 import { Container, Row, Col } from "react-bootstrap"
-
+import Mark from "../../conponents/mark"
 export default async function Page({
     params,
   }: {
@@ -25,8 +25,7 @@ export default async function Page({
           <Container className="" style={{ overflowWrap: "break-word" }}>
             <Row className="justify-content-md-center">
               <Col md={{ span: 8 }}>
-                {/* <Mark>{data.content}</Mark> */}
-                {post.content}
+              <Mark content={post.content} />
               </Col>
             </Row>
           </Container>
@@ -35,9 +34,9 @@ export default async function Page({
           <hr />
           <p>
             tag: <br />
-            {/* {data.tags.map((tag) => (
+            {post.tags.map((tag) => (
               <span key={tag}>{tag} </span>
-            ))} */}
+            ))}
           </p>
         </div>
       </div>

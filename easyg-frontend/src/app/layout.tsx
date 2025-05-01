@@ -4,6 +4,7 @@ import "./globals.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from "react-bootstrap";
 import Link from "next/link";
+import TitleSuffix  from "./conponents/titlesuffix";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en">
       <head>
@@ -38,9 +40,9 @@ export default function RootLayout({
               Blog
             </Link>
           </h1>
-          {/* <div className="align-self-end pb-2">
-            {titleSuffix ? " | " + titleSuffix : ""}
-          </div> */}
+          <div className="align-self-end pb-2">
+            <TitleSuffix />
+          </div>
         </div>
         <hr className="mb-5" />
         <Container className="container-height">
