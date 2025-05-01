@@ -1,7 +1,7 @@
 package sql
 
 import (
-	"goblogeasyg/sql"
+	"goblogeasyg/internal/sql"
 
 	"gorm.io/gorm"
 )

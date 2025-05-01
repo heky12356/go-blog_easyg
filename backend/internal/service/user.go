@@ -3,8 +3,8 @@ package service
 import (
 	"net/http"
 
-	sql "goblogeasyg/sql/model"
-	utils "goblogeasyg/utils/jwt"
+	sql "goblogeasyg/internal/sql/model"
+	utils "goblogeasyg/internal/utils/jwt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

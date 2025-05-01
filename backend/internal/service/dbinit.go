@@ -3,7 +3,7 @@ package service
 import (
 	"net/http"
 
-	sql "goblogeasyg/sql/model"
+	sql "goblogeasyg/internal/sql/model"
 
 	"github.com/gin-gonic/gin"
 )

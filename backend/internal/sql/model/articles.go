@@ -3,7 +3,7 @@ package sql
 import (
 	"log"
 
-	"goblogeasyg/sql"
+	"goblogeasyg/internal/sql"
 
 	"gorm.io/gorm"
 )
@@ -37,7 +37,7 @@ func CreatePost(artical Article) error {
 				if err == gorm.ErrRecordNotFound {
 					if err := tx.Unscoped().Where("name = ?", tag.Name).First(&exitTag).Error; err == nil {
 						// 如果软删除的tag存在，恢复它
-						log.Print(exitTag)
+						// log.Print(exitTag)
 						if err := tx.Unscoped().Model(&exitTag).Update("deleted_at", nil).Error; err != nil {
 							return err
 						}

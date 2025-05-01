@@ -4,16 +4,16 @@ import (
 	"log"
 	"os"
 
-	"goblogeasyg/middleware"
-	"goblogeasyg/service"
-	"goblogeasyg/sql"
+	"goblogeasyg/internal/middleware"
+	"goblogeasyg/internal/service"
+	"goblogeasyg/internal/sql"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}

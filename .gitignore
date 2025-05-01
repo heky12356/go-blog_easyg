@@ -2,5 +2,6 @@
 /esayg_frontend/.gitignore
 /backend/tmp/
 /backend/test.db
+/backend/cmd/goblogeasyg/test.db
 
 

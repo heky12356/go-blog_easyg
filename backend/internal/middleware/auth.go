@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	utils "goblogeasyg/utils/jwt"
+	utils "goblogeasyg/internal/utils/jwt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
