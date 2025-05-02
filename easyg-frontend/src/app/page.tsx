@@ -12,7 +12,7 @@ export default async function Home() {
     <div>
       <div>Home</div>
       <br />
-      {posts.map((post: { uid: string; title: string; }) => (
+      {(posts == null) || posts.map((post: { uid: string; title: string; }) => (
         <div key={post.uid}>
           <Link href={`/post/${post.uid}`} className="text-decoration-none">{post.title}</Link>
           <hr />
