@@ -16,7 +16,7 @@ export default async function Page({
       const res = await fetch(`http://localhost:8080/api/post/post/${uid}`)
       const data = await res.json()
       post = data.post
-      console.log(data)
+      //console.log(data)
     }  
     return (
       <div style={{ height: "100%" }}>

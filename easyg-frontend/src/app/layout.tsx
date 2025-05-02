@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from "react-bootstrap";
 import Link from "next/link";
 import TitleSuffix  from "./conponents/titlesuffix";
+import Footer from "./conponents/footer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -48,7 +49,7 @@ export default function RootLayout({
         <Container className="container-height">
         {children}
         </Container>
-        {/* <Footer /> */}
+        <Footer />
       </Container>
     </div>
       </body>
