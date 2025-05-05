@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"goblogeasyg/internal/cache"
 	utils "goblogeasyg/internal/utils/jwt"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,13 @@ func Auth() gin.HandlerFunc {
 		}
 
 		tokenString = strings.TrimPrefix(tokenString, "Bearer ")
+
+		// 检查token是否在黑名单中
+		if cache.IsInBlacklist(tokenString) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "token已失效"})
+			c.Abort()
+			return
+		}
 
 		var claims utils.Claims
 		token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {

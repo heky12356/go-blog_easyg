@@ -1,6 +1,7 @@
 /esayg_frontend/node_modules
 /esayg_frontend/.gitignore
 /backend/tmp/
+/backend/cmd/goblogeasyg/tmp/
 /backend/test.db
 /backend/cmd/goblogeasyg/test.db
 /tips.md

@@ -63,7 +63,7 @@ func Login(c *gin.Context) {
 	}
 
 	// Compare the hashed password with the provided password
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.Password)); err != nil {
+	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.Password)); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "password is wrong"})
 		return
 	}
