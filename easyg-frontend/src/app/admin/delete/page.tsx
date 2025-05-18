@@ -9,6 +9,7 @@ import Col from "react-bootstrap/esm/Col";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import query from "../../utils/query";
+import CloseButton from 'react-bootstrap/CloseButton';
 export default function Delete() {
   const [data, setData] = useState<{ uid: string , title: string}[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +80,9 @@ export default function Delete() {
                 
               </Col>
               <Col md={3}>
-                <span onClick={() => handleDelete(post)} style={{cursor:"pointer"}}>x</span>
+                <CloseButton 
+                  onClick={() => handleDelete(post)}
+                />
               </Col>
             </Row>
           </Container>
