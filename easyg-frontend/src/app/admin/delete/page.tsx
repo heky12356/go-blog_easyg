@@ -71,7 +71,7 @@ export default function Delete() {
   return (
     <div>
       <br />
-      {data.map((post: { uid: string; title: string} ) => (
+      {data?.map((post: { uid: string; title: string} ) => (
         <div key={post.uid}>
           <Container>
             <Row>
