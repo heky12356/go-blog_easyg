@@ -1,0 +1,5 @@
+app:
+  jwtkey: "heky12356"
+
+database:
+  litedb: "test.db"

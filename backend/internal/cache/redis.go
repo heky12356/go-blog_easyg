@@ -13,8 +13,7 @@ var (
 	ctx         = context.Background()
 )
 
-// InitRedis 初始化Redis连接
-func InitRedis() error {
+func init() {
 	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379", // Redis服务器地址
 		Password: "",               // 密码
@@ -25,11 +24,10 @@ func InitRedis() error {
 	_, err := RedisClient.Ping(ctx).Result()
 	if err != nil {
 		logrus.Errorf("Redis连接失败: %v", err)
-		return err
+		panic(err)
 	}
 
 	logrus.Info("Redis连接成功")
-	return nil
 }
 
 // AddToBlacklist 将token添加到黑名单

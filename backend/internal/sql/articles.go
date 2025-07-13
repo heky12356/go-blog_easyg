@@ -3,8 +3,6 @@ package sql
 import (
 	"log"
 
-	"goblogeasyg/internal/sql"
-
 	"gorm.io/gorm"
 )
 
@@ -22,13 +20,11 @@ type Article struct {
 }
 
 func AutoMigrateArticle() (err error) {
-	db := sql.GetDB()
 	err = db.AutoMigrate(&Article{}, &Tag{})
 	return
 }
 
 func CreatePost(artical Article) error {
-	db := sql.GetDB()
 	return db.Transaction(func(tx *gorm.DB) error {
 		// 处理每一个tag
 		for i, tag := range artical.Tags {
@@ -68,7 +64,6 @@ func CreatePost(artical Article) error {
 
 func GetPostsBase() (posts []interface{}, err error) {
 	var post []Article
-	db := sql.GetDB()
 	// 使用 Preload 加载关联的 Tags
 	err = db.Preload("Tags").Find(&post).Error
 	if err != nil {
@@ -91,7 +86,6 @@ func GetPostsBase() (posts []interface{}, err error) {
 
 func GetPostByUid(uid string) (post interface{}, err error) {
 	var article Article
-	db := sql.GetDB()
 	err = db.Preload("Tags").Where("uid = ?", uid).First(&article).Error
 	if err != nil {
 		return nil, err
@@ -112,7 +106,6 @@ func GetPostByUid(uid string) (post interface{}, err error) {
 
 func DeletePost(uid string) (err error) {
 	var article Article
-	db := sql.GetDB()
 	err = db.Where("uid = ?", uid).First(&article).Error
 	if err != nil {
 		return err

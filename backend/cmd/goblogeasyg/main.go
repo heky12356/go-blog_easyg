@@ -1,37 +1,15 @@
 package main
 
 import (
-	"log"
-	"os"
-
-	"goblogeasyg/internal/cache"
 	"goblogeasyg/internal/middleware"
 	"goblogeasyg/internal/service"
-	"goblogeasyg/internal/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	DbName := os.Getenv("DB_NAME")
-	err = sql.Init(DbName)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// 初始化Redis
-	err = cache.InitRedis()
-	if err != nil {
-		log.Fatal("Redis初始化失败:", err)
-	}
 	r := gin.Default()
 	r.GET("/", service.Home)
-	r.GET("/init", service.DBinit)
 
 	apiuser := r.Group("/api/user")
 	{
