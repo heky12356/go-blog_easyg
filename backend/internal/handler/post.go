@@ -27,7 +27,7 @@ func (p *PostHandler) CreatePost(c *gin.Context) {
 		response.ErrorResponse(c, response.CodeBadRequest, fmt.Sprintf("create post failed: %v", err))
 		return
 	}
-	if err := p.PostService.CreatePost(post.Title, post.Content, post.Tag); err != nil {
+	if err := p.PostService.CreatePost(post.Title, post.Content, post.Tags); err != nil {
 		response.ErrorResponse(c, response.CodeBadRequest, fmt.Sprintf("create post failed: %v", err))
 		return
 	}

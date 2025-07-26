@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"strings"
 
 	"goblogeasyg/internal/sql"
 	"goblogeasyg/internal/utils"
@@ -16,7 +15,7 @@ type Post struct {
 }
 
 type PostServiceInterface interface {
-	CreatePost(title string, content string, tag string) error
+	CreatePost(title string, content string, tags []string) error
 	GetPosts() ([]Post, error)
 	GetPost(uid string) (Post, error)
 	DeletePost(uid string) error
@@ -29,15 +28,14 @@ func NewPostService() PostServiceInterface {
 }
 
 // CreatePost 创建文章
-func (p *PostService) CreatePost(title string, content string, tag string) error {
+func (p *PostService) CreatePost(title string, content string, tagsdata []string) error {
 	if title == "" || content == "" {
 		return fmt.Errorf("title or content cannot be empty")
 	}
 
 	// 获取tag并构造sql.Tag类型结构体
-	tagsData := strings.Split(tag, ",")
 	var tags []sql.Tag
-	for _, t := range tagsData {
+	for _, t := range tagsdata {
 		tags = append(tags, sql.Tag{Name: t})
 	}
 

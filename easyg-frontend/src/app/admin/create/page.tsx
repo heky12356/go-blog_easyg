@@ -7,13 +7,13 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Modal from 'react-bootstrap/Modal';
-import axios from "axios";
 import query from "../../utils/query";
+import TagInput from "../../../components/TagInput";
 export default function Create() {
-  // 使用 useState 来保存 title、content 和 tag 的值
+  // 使用 useState 来保存 title、content 和 tags 的值
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [tag, setTag] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const handleClose = () => {
@@ -25,20 +25,13 @@ export default function Create() {
   const handleSubmit = (e: any) => {
     e.preventDefault(); // 阻止默认表单提交行为
 
-    // 将 tagStr 按逗号分割并去除多余空格，构造 tags 数组
-    const tags = tag
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter((tag) => tag);
-
-    //console.log(tags);
     // 构造 JSON 对象
     const data = {
       title: title,
       content: content,
       tags: tags,
     };
-    //console.log(data);
+    console.log(data);
     // 使用 axios 实例 query 发送 POST 请求，注意修改 URL 为你的接口地址
     query
       .post("/api/post/create", data)
@@ -81,7 +74,12 @@ export default function Create() {
         </Col>
         <Col>
           <Form.Label>Tag</Form.Label>
-          <Form.Control type="text" placeholder=""  value={tag} onChange={(e) => setTag(e.target.value)}/>
+          <TagInput 
+            tags={tags} 
+            onTagsChange={setTags} 
+            placeholder="输入标签后按回车添加" 
+            maxTags={10}
+          />
         </Col>
       </Row>
       <Row>
