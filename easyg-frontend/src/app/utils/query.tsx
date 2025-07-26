@@ -1,15 +1,12 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { Navigate } from 'react-router-dom';
 const query = axios.create({ baseURL: '/api' });
 
-var accessToken = Cookies.get("accessToken");
-var refreshToken = Cookies.get("refreshToken");
 
 // 请求拦截
-query.interceptors.response.use(
+query.interceptors.request.use(
     config => {
-        const token = accessToken;
+        const token = Cookies.get("accessToken");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -28,13 +25,17 @@ query.interceptors.response.use(
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
+                const refreshToken = Cookies.get("refreshToken");
                 const response = await axios.post('/api/api/user/refreshaccesstoken', { refreshToken: refreshToken });
-                accessToken = response.data.token;
-                query.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-                Cookies.set("accessToken", response.data.token, { secure: true, sameSite: "Strict" });
+                const accessToken = response.data.token;
+                Cookies.set("accessToken", accessToken, { secure: true, sameSite: "Strict" });
+                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
                 return query(originalRequest);
             } catch (refreshError) {
-                return <Navigate to="/login" />
+                Cookies.remove("accessToken");
+                Cookies.remove("refreshToken");
+                window.location.href = "/login";
+                return Promise.reject(refreshError);
             }
         }
         return Promise.reject(error);
