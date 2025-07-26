@@ -9,11 +9,13 @@ import Col from "react-bootstrap/Col";
 import Modal from 'react-bootstrap/Modal';
 import query from "../../utils/query";
 import TagInput from "../../../components/TagInput";
+import CategorySelector from "../../../components/CategorySelector";
 export default function Create() {
   // 使用 useState 来保存 title、content 和 tags 的值
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const handleClose = () => {
@@ -30,6 +32,7 @@ export default function Create() {
       title: title,
       content: content,
       tags: tags,
+      categories: selectedCategoryIds,
     };
     console.log(data);
     // 使用 axios 实例 query 发送 POST 请求，注意修改 URL 为你的接口地址
@@ -41,8 +44,9 @@ export default function Create() {
       })
       .catch((error : any) => {
         setShowModal(true);
-        setModalMessage(error.response.data.error);
-        //console.log(error);
+        setModalMessage(error.response.data.message);
+        console.log(error.response.data.message);
+        console.log(error.response.data);
       });
   };
 
@@ -79,6 +83,12 @@ export default function Create() {
             onTagsChange={setTags} 
             placeholder="输入标签后按回车添加" 
             maxTags={10}
+          />
+          
+          <Form.Label className="mt-3">分类</Form.Label>
+          <CategorySelector
+            selectedCategoryIds={selectedCategoryIds}
+            onCategoryChange={setSelectedCategoryIds}
           />
         </Col>
       </Row>

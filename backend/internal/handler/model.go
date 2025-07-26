@@ -36,7 +36,12 @@ type RefreshAccessTokenRequest struct {
 }
 
 type CreatePostRequest struct {
-	Title   string   `json:"title"`
-	Content string   `json:"content"`
-	Tags    []string `json:"tags"`
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	Categories []string `json:"categories"`
+	Tags       []string `json:"tags"`
+}
+
+type CreateCategoryRequest struct {
+	Category string `json:"category"`
 }

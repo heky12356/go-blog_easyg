@@ -14,10 +14,36 @@ type PostHandlerInterface interface {
 	GetPost(c *gin.Context)
 	GetAllPost(c *gin.Context)
 	DeletePost(c *gin.Context)
+	CreateCategory(c *gin.Context)
+	GetAllCategories(c *gin.Context)
 }
 
 type PostHandler struct {
 	PostService service.PostServiceInterface
+}
+
+// GetAllCategories implements PostHandlerInterface.
+func (p *PostHandler) GetAllCategories(c *gin.Context) {
+	categories, err := p.PostService.GetAllCategories()
+	if err != nil {
+		response.ErrorResponse(c, response.CodeBadRequest, fmt.Sprintf("get all categories failed: %v", err))
+		return
+	}
+	response.SuccessResponse(c, categories, "get all categories success")
+}
+
+// CreateCategory implements PostHandlerInterface.
+func (p *PostHandler) CreateCategory(c *gin.Context) {
+	var category CreateCategoryRequest
+	if err := c.ShouldBindJSON(&category); err != nil {
+		response.ErrorResponse(c, response.CodeBadRequest, fmt.Sprintf("create category failed: %v", err))
+		return
+	}
+	if err := p.PostService.CreateCategory(category.Category); err != nil {
+		response.ErrorResponse(c, response.CodeBadRequest, fmt.Sprintf("create category failed: %v", err))
+		return
+	}
+	response.SuccessResponse(c, nil, "create category success")
 }
 
 // CreatePost implements PostHandlerInterface.
@@ -27,7 +53,8 @@ func (p *PostHandler) CreatePost(c *gin.Context) {
 		response.ErrorResponse(c, response.CodeBadRequest, fmt.Sprintf("create post failed: %v", err))
 		return
 	}
-	if err := p.PostService.CreatePost(post.Title, post.Content, post.Tags); err != nil {
+	fmt.Printf("%+v", post)
+	if err := p.PostService.CreatePost(post.Title, post.Content, post.Tags, post.Categories); err != nil {
 		response.ErrorResponse(c, response.CodeBadRequest, fmt.Sprintf("create post failed: %v", err))
 		return
 	}

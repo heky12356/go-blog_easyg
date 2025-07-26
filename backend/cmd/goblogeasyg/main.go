@@ -32,6 +32,8 @@ func main() {
 		postapi.DELETE("/delete/:uid", middleware.Auth(), postHandler.DeletePost)
 		postapi.GET("/getposts", postHandler.GetAllPost)
 		postapi.GET("/post/:uid", postHandler.GetPost)
+		postapi.POST("/createcategory", middleware.Auth(), postHandler.CreateCategory)
+		postapi.GET("/getallcategories", postHandler.GetAllCategories)
 	}
 	r.Run(":8080")
 }
