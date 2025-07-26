@@ -1,85 +1,102 @@
 package service
 
 import (
-	"net/http"
+	"fmt"
+	"strings"
 
 	"goblogeasyg/internal/sql"
 	"goblogeasyg/internal/utils"
-
-	"github.com/gin-gonic/gin"
 )
 
-// 创建
-func CreatePost(c *gin.Context) {
-	var artical map[string]interface{}
-	if err := c.ShouldBind(&artical); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	if artical["content"] == "" || artical["title"] == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "title or content cannot be empty"})
-		return
+type Post struct {
+	Title   string   `json:"title"`
+	Content string   `json:"content"`
+	Tags    []string `json:"tags"`
+	Uid     string   `json:"uid"`
+}
+
+type PostServiceInterface interface {
+	CreatePost(title string, content string, tag string) error
+	GetPosts() ([]Post, error)
+	GetPost(uid string) (Post, error)
+	DeletePost(uid string) error
+}
+
+type PostService struct{}
+
+func NewPostService() PostServiceInterface {
+	return &PostService{}
+}
+
+// CreatePost 创建文章
+func (p *PostService) CreatePost(title string, content string, tag string) error {
+	if title == "" || content == "" {
+		return fmt.Errorf("title or content cannot be empty")
 	}
 
 	// 获取tag并构造sql.Tag类型结构体
-	tagsData, ok := artical["tags"].([]interface{})
-	if !ok {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid tags format"})
-		return
-	}
+	tagsData := strings.Split(tag, ",")
 	var tags []sql.Tag
 	for _, t := range tagsData {
-		tags = append(tags, sql.Tag{Name: t.(string)})
+		tags = append(tags, sql.Tag{Name: t})
 	}
 
 	// 创建uid
 	uid, err := utils.CreateUid()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return fmt.Errorf("create uid failed: %w", err)
 	}
 
 	// 使用sql.CreatePost插入数据
 	err = sql.CreatePost(sql.Article{
-		Content: artical["content"].(string),
-		Title:   artical["title"].(string),
+		Content: content,
+		Title:   title,
 		Tags:    tags,
 		Uid:     uid,
 	})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return fmt.Errorf("create post failed: %w", err)
 	}
-	c.JSON(200, gin.H{"message": "create"})
+	return nil
 }
 
-// 获取
-func GetPosts(c *gin.Context) {
+// GetPosts 获取全部文章
+func (p *PostService) GetPosts() ([]Post, error) {
+	var postList []Post
 	posts, err := sql.GetPostsBase()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return nil, fmt.Errorf("get posts failed: %w", err)
 	}
-	c.JSON(200, gin.H{"posts": posts})
+
+	for _, post := range posts {
+		postList = append(postList, Post{
+			Title: post["title"].(string),
+			Tags:  post["tags"].([]string),
+			Uid:   post["uid"].(string),
+		})
+	}
+	return postList, nil
 }
 
-func GetPost(c *gin.Context) {
-	uid := c.Param("uid")
+// GetPost 获取文章详情
+func (p *PostService) GetPost(uid string) (Post, error) {
 	post, err := sql.GetPostByUid(uid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return Post{}, fmt.Errorf("get post failed: %w", err)
 	}
-	c.JSON(200, gin.H{"post": post})
+	return Post{
+		Title:   post["title"].(string),
+		Content: post["content"].(string),
+		Tags:    post["tags"].([]string),
+		Uid:     post["uid"].(string),
+	}, nil
 }
 
-// 删除
-func DeletePost(c *gin.Context) {
-	uid := c.Param("uid")
+// DeletePost 删除文章
+func (p *PostService) DeletePost(uid string) error {
 	err := sql.DeletePost(uid)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return fmt.Errorf("delete post failed: %w", err)
 	}
-	c.JSON(200, gin.H{"message": "delete success"})
+	return nil
 }

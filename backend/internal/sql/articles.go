@@ -62,7 +62,7 @@ func CreatePost(artical Article) error {
 	})
 }
 
-func GetPostsBase() (posts []interface{}, err error) {
+func GetPostsBase() (posts []map[string]interface{}, err error) {
 	var post []Article
 	// 使用 Preload 加载关联的 Tags
 	err = db.Preload("Tags").Find(&post).Error
@@ -84,7 +84,7 @@ func GetPostsBase() (posts []interface{}, err error) {
 	return
 }
 
-func GetPostByUid(uid string) (post interface{}, err error) {
+func GetPostByUid(uid string) (post map[string]interface{}, err error) {
 	var article Article
 	err = db.Preload("Tags").Where("uid = ?", uid).First(&article).Error
 	if err != nil {

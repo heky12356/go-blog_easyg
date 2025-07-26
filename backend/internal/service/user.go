@@ -1,15 +1,31 @@
 package service
 
 import (
-	"net/http"
+	"errors"
+	"fmt"
+	"time"
 
+	"goblogeasyg/internal/cache"
 	sql "goblogeasyg/internal/sql"
 	utils "goblogeasyg/internal/utils/jwt"
 
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type UserServiceInterface interface {
+	Register(username string, password string, confirmPassword string, email string) error
+	Login(username string, password string) (token []map[string]string, err error)
+	GetallUser() (users []User, err error)
+	RefreshAccessToken(refreshToken string) (token string, err error)
+	Logout(token string) error
+}
+
+type UserService struct{}
+
+func NewUserService() UserServiceInterface {
+	return &UserService{}
+}
 
 type User struct {
 	Username string `json:"username"`
@@ -18,107 +34,108 @@ type User struct {
 }
 
 // refresh access token
-func RefreshAccessToken(c *gin.Context) {
-	var data struct {
-		RefreshToken string `json:"refreshToken"`
-	}
-	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	token, err := utils.RefreshToken(data.RefreshToken)
+func (u *UserService) RefreshAccessToken(refreshToken string) (token string, err error) {
+	token, err = utils.RefreshToken(refreshToken)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return "", fmt.Errorf("refresh token failed: %w", err)
 	}
-	c.JSON(200, gin.H{"token": token})
+	return token, nil
 }
 
 // get all user
-func GetallUser(c *gin.Context) {
+func (u *UserService) GetallUser() (users []User, err error) {
 	data, err := sql.GetallUser()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return nil, err
 	}
-	c.JSON(200, gin.H{"users": data})
+	for _, d := range data {
+		users = append(users, User{
+			Username: d["username"].(string),
+			Email:    d["email"].(string),
+		})
+	}
+	return users, nil
 }
 
 // Login
-func Login(c *gin.Context) {
-	var data User
+func (u *UserService) Login(username string, password string) (token []map[string]string, err error) {
 	var user sql.User
-	if err := c.ShouldBind(&data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	if username == "" || password == "" {
+		return nil, errors.New("username or password cannot be empty")
 	}
-	if data.Username == "" || data.Password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password cannot be empty"})
-		return
-	}
-	user, err := sql.GetUserByUsername(data.Username)
+	user, err = sql.GetUserByUsername(username)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return nil, fmt.Errorf("get user by username failed: %w", err)
 	}
 
 	// Compare the hashed password with the provided password
-	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.Password)); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "password is wrong"})
-		return
+	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return nil, errors.New("password is wrong")
 	}
 
 	refreshtoken, err := utils.CreateRefreshToken(user.Username)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return nil, fmt.Errorf("create refresh token failed: %w", err)
 	}
 	acessstoken, err := utils.CreateAssessToken(user.Username)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return nil, fmt.Errorf("create access token failed: %w", err)
 	}
-	c.JSON(200, gin.H{"message": "Login", "refreshToken": refreshtoken, "accessToken": acessstoken})
+	token = []map[string]string{
+		{
+			"refreshToken": refreshtoken,
+			"accessToken":  acessstoken,
+		},
+	}
+	return token, nil
 }
 
 // Register
-func Register(c *gin.Context) {
-	var user struct {
-		Username        string `json:"username"`
-		Password        string `json:"password"`
-		ConfirmPassword string `json:"confirmPassword"`
-		Email           string `json:"email"`
+func (u *UserService) Register(username string, password string, confirmPassword string, email string) error {
+	if username == "" || password == "" || confirmPassword == "" || email == "" {
+		return errors.New("username or password or confirm password or email cannot be empty")
 	}
-	if err := c.ShouldBind(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if user.Username == "" || user.Password == "" || user.ConfirmPassword == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password cannot be empty"})
-		return
-	}
-	if user.Password != user.ConfirmPassword {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "password and confirm password not match"})
-		return
+	if password != confirmPassword {
+		return errors.New("password and confirm password not match")
 	}
 
 	// Hash the password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		logrus.Fatal(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "host error"})
-		return
+		return fmt.Errorf("hash password failed: %w", err)
 	}
 
 	err = sql.CreateUser(sql.User{
-		Username: user.Username,
+		Username: username,
 		Password: string(hashedPassword),
-		Email:    user.Email,
+		Email:    email,
 	})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return fmt.Errorf("create user failed: %w", err)
 	}
-	c.JSON(200, gin.H{"message": "Register"})
+	return nil
+}
+
+// Logout handles user logout by invalidating the current token
+func (u *UserService) Logout(token string) error {
+	// 解析token以获取过期时间
+	claims, err := utils.ParseToken(token)
+	if err != nil {
+		return fmt.Errorf("parse token failed: %w", err)
+	}
+
+	// 计算token剩余有效期
+	expiration := time.Until(time.Unix(claims.ExpiresAt, 0))
+	if expiration <= 0 {
+		return fmt.Errorf("token expired")
+	}
+
+	// 将token加入黑名单，使用剩余有效期作为过期时间
+	err = cache.AddToBlacklist(token, expiration)
+	if err != nil {
+		return fmt.Errorf("add token to blacklist failed: %w", err)
+	}
+
+	return nil
 }
