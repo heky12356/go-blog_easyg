@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
@@ -22,7 +21,7 @@ export default function Delete() {
     query
       .get("/api/post/getposts")
       .then((response) => {
-        setData(response.data.posts);
+        setData(response.data.data);
         setLoading(false);
       })
       .catch((err) => {

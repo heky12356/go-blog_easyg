@@ -1,10 +1,9 @@
-import axios from "axios"
 import { Container, Row, Col } from "react-bootstrap"
 import Mark from "../../conponents/mark"
 export default async function Page({
     params,
   }: {
-    params: Promise<{ uid: string }>
+    params: { uid: string }
   }) {
     const { uid } = await params
     var post = {
@@ -13,9 +12,11 @@ export default async function Page({
       tags: [],
     };
     if (uid) {
-      const res = await fetch(`http://localhost:8080/api/post/post/${uid}`)
-      const data = await res.json()
-      post = data.post
+      const res = await fetch(`${process.env.API_URL}/api/post/post/${uid}`, {
+        next: { revalidate: 60 }, // 启用ISR缓存
+      });
+      const data = await res.json();
+      post = data.data;
       //console.log(data)
     }  
     return (

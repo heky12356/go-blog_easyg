@@ -8,7 +8,6 @@ import Col from "react-bootstrap/esm/Col";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
 export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -21,13 +20,12 @@ export default function Login() {
         password: password,
       })
       .then((response) => {
-        //console.log(response.data);
-        Cookies.set("refreshToken", response.data.refreshToken, {
+        Cookies.set("refreshToken", response.data.data[0].refreshToken, {
           expires: 3,
           secure: true,
           sameSite: "Strict",
         });
-        Cookies.set("accessToken", response.data.accessToken, {
+        Cookies.set("accessToken", response.data.data[0].accessToken, {
           secure: true,
           sameSite: "Strict",
         });
