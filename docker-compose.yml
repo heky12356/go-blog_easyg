@@ -1,5 +1,9 @@
 version: '3.8'
 services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
   backend:
     build: ./backend
     ports:
@@ -8,6 +12,8 @@ services:
       - ./backend/test.db:/root/test.db
     environment:
       - GIN_MODE=release
+    depends_on:
+      - redis
   
   frontend:
     build: ./easyg-frontend
